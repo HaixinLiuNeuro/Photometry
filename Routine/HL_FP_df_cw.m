@@ -1,10 +1,10 @@
 % function  [df_F_ds, ts_ds, df_F, F_baseline, FP_filter] = HL_FP_df_cw (rawFP, ts, rawFs, system_baseline, ...
-%                                                                         lpCut, filtOrder, interpType, fitType, winSize, winOv, basePrc)
+%                                                                         lpCut, filtOrder, interpType, fitType, winSize, winOv, basePrc, dsRate)
 % function to process photometry data using constant excitation imaging
 % method, using Pratik's functions 
 %
 %   INPUT:
-%
+%       dsRate:dsRate = rawFs/params.FP.ds2;  ds2 is downsample to ...
 %   
 %   OUTPUT:
 %       df_F_ds: processed dF/F data, downsampled using the low-pass filter
