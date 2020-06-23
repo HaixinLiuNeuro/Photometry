@@ -76,6 +76,10 @@ DI_convert = arrayfun(@(x) bitget(x,8:-1:1,'uint8')', s.(temp_fieldn{temp_idx}).
 DI_convert_temp = cat(2,DI_convert{:});
 
 % append to ch data and names
+% If only one channel, it will be a char not a cell
+if ischar(s.header.DIChannelNames)
+    s.header.DIChannelNames = {s.header.DIChannelNames};
+end
 for i_DI = 1:length(s.header.DIChannelNames)
     DATA.ch_data = cat(2,DATA.ch_data, double(DI_convert_temp(end-i_DI+1,:)')); % IMPORTANT change to double format
     DATA.ch_names = cat(1, DATA.ch_names, s.header.DIChannelNames(i_DI));
