@@ -67,7 +67,7 @@ if I remember correctly.
 In matlab, you can use the bitget() function to extract individual bits.
 %}
 if ~isempty(s.header.DIChannelNames)
-    disp('Having DI channels, read in [only support 8 DI channels for now]')
+    disp('Having DI channels, reading in [only support 8 DI channels for now. This takes a while]')
     % s.sweep_0001.digitalScans;
     % s.header.DIChannelNames;
     
@@ -88,6 +88,7 @@ if ~isempty(s.header.DIChannelNames)
             double(   cellfun(@(x) x(end-i_DI+1),DI_convert)   )); % IMPORTANT change to double format %  DI_convert_temp(end-i_DI+1,:)'
         DATA.ch_names = cat(1, DATA.ch_names, s.header.DIChannelNames(i_DI));
     end
+    disp('Done DI channel conversion')
 else
     
 end
