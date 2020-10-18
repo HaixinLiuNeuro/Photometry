@@ -14,7 +14,7 @@
 % HL 2019-11 
 % need to modify to work for 2 chan stim. paradigm
 %%
-function [FP_clean, Thred, n_trial] = HL_FP_CleanStiArtiFact(FP,Sti,sr, Thred)
+function [FP_clean, Thred, n_trial] = HL_FP_CleanStiArtiFact(FP,Sti,sr, exclude_leeway, Thred)
 % for clean FP, exclude STIM artifacts, use Sti channel
 % here can handle several Stim channels
 % sum the two channels
@@ -27,7 +27,7 @@ end
 % now use a response of GUI
 % if not provided
 
-if nargin < 4
+if nargin < 5
    figure;
    plot(unique(Sti));
    title('Click Threshold for detecting artifact, then PRESS ENTER')
@@ -37,7 +37,9 @@ if nargin < 4
    close
 end
 % some parameters used 
-exclude_leeway = 0.006; % s 
+if nargin < 4
+exclude_leeway = 0.006; % 6ms
+end
 disp(['exclude s around stimulation (half on each end) ',num2str(exclude_leeway)]);
 % there is a responding time for LED (laser probably the same or worse)=>
 % extend the excluding window
