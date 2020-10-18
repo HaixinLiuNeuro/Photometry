@@ -36,7 +36,7 @@ params.FP.filtOrder = 10; % Order of the filter
 params.FP.interpType = 'linear'; % 'linear' 'spline' 
 params.FP.fitType = 'interp'; % Fit method 'interp' , 'exp' , 'line'
 params.FP.winSize = 20; % Window size for baselining in seconds
-params.FP.winOv = 10; %Window overlap size in seconds
+params.FP.winOv = 10; % Window overlap size in seconds
 params.FP.basePrc = 10; % Percentile value from 1 - 100 to use when finding baseline points
 params.FP.ds2 = 50; % downsample to freq, default
 disp(params.FP)
