@@ -24,7 +24,8 @@
 % params.FP.basePrc = 10; % Percentile value from 1 - 100 to use when finding baseline points
 % params.FP.ds2 = 50; % downsample to freq, default
 
-
+% HL 2020-10-17 
+% take care of NaNs by removing and refill with NaN after filtering
 %%
 function  [df_F_ds, ts_ds, df_F, F_baseline, FP_filter] = ...
     HL_FP_df_cw (rawFP, ts, rawFs, system_baseline, ...
@@ -78,7 +79,9 @@ end
 fprintf(2,'Lowpass Filter: %d Hz. downsample to %d Hz. \n Default params:\n',lpCut, rawFs/dsRate);
 %%
 %  filter and calcuate dF/F using method: 
-FP_filter = filterFP(rawFP - system_baseline,rawFs,lpCut,filtOrder,'lowpass');
+FP_filter = nan(size(rawFP));
+
+FP_filter(~isnan(rawFP)) = filterFP(rawFP(~isnan(rawFP)) - system_baseline,rawFs,lpCut,filtOrder,'lowpass');
 [df_F,F_baseline] = baselineFP(FP_filter,interpType,fitType,basePrc,winSize,winOv,rawFs);
 
 % downsample to reduce data size, but not lose temporal info. 
