@@ -49,17 +49,47 @@ switch tmpStimLib.SelectedOutputableClassName
         [map_num_used,~, trial.label] = unique(seq_map_num);
         for ii = 1:length(map_num_used)
             trial.type{ii} = tmpStimLib.Maps.(['element', num2str(map_num_used(ii))]).Name;
+            trial.ChannelName{ii} = tmpStimLib.Maps.(['element', num2str(map_num_used(ii))]).ChannelName;
+            trial.Stim_num{ii} = tmpStimLib.Maps.(['element', num2str(map_num_used(ii))]).IndexOfEachStimulusInLibrary;
+            if ~ischar(trial.ChannelName{ii}) % multiple channels
+            for i_ch = 1:length(trial.ChannelName{ii})
+                trial.Stim_name{ii}{i_ch} = tmpStimLib.Stimuli.(['element', num2str( trial.Stim_num{ii}.(['element' num2str(i_ch)]) )]).Name;
+                trial.Stim_params{ii}{i_ch} = tmpStimLib.Stimuli.(['element', num2str( trial.Stim_num{ii}.(['element' num2str(i_ch)]) )]).Delegate;
+
+            end
+            else % one channel 
+                i_ch = 1;
+                 trial.Stim_name{ii}{i_ch} = tmpStimLib.Stimuli.(['element', num2str( trial.Stim_num{ii}.(['element' num2str(i_ch)]) )]).Name;
+                trial.Stim_params{ii}{i_ch} = tmpStimLib.Stimuli.(['element', num2str( trial.Stim_num{ii}.(['element' num2str(i_ch)]) )]).Delegate;
+            end
         end
+        
+        % get stimuli parameters
     case 'ws.StimulusMap' %? need to check files
         fprintf('Stim. Map used: %s\n', tmpStimLib.Maps.(['element',num2str(tmpStimLib.SelectedOutputableIndex)]).Name);
         trial.type{1} = tmpStimLib.Maps.(['element',num2str(tmpStimLib.SelectedOutputableIndex)]).Name;
         trial.label = 1; % only one type of trials used 
         map_num_used = tmpStimLib.SelectedOutputableIndex;
+         for ii = 1:length(map_num_used)
+            trial.type{ii} = tmpStimLib.Maps.(['element', num2str(map_num_used(ii))]).Name;
+            trial.ChannelName{ii} = tmpStimLib.Maps.(['element', num2str(map_num_used(ii))]).ChannelName;
+            trial.Stim_num{ii} = tmpStimLib.Maps.(['element', num2str(map_num_used(ii))]).IndexOfEachStimulusInLibrary;
+            if ~ischar(trial.ChannelName{ii}) % multiple channels
+            for i_ch = 1:length(trial.ChannelName{ii})
+                trial.Stim_name{ii}{i_ch} = tmpStimLib.Stimuli.(['element', num2str( trial.Stim_num{ii}.(['element' num2str(i_ch)]) )]).Name;
+                trial.Stim_params{ii}{i_ch} = tmpStimLib.Stimuli.(['element', num2str( trial.Stim_num{ii}.(['element' num2str(i_ch)]) )]).Delegate;
+
+            end
+            else % one channel 
+                i_ch = 1;
+                 trial.Stim_name{ii}{i_ch} = tmpStimLib.Stimuli.(['element', num2str( trial.Stim_num{ii}.(['element' num2str(i_ch)]) )]).Name;
+                trial.Stim_params{ii}{i_ch} = tmpStimLib.Stimuli.(['element', num2str( trial.Stim_num{ii}.(['element' num2str(i_ch)]) )]).Delegate;
+            end
+        end
         
-        
-%     case 'ws.StimulusStimulus' %? HL likely no use of single stimulus now
-%     
-        
-    otherwise
+    case 'ws.StimulusStimulus' %? HL likely no use of single stimulus now
         warning('NOT INCLUDED YET, return empty matrix');
+        
+    otherwise 
+        warning('Unknown category, return empty matrix. Need to check your WS data');
 end
