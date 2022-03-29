@@ -69,8 +69,12 @@ In matlab, you can use the bitget() function to extract individual bits.
 if ~isempty(s.header.DIChannelNames)
     disp('Having DI channels, reading in [only support 8 DI channels for now. This takes a while]')
     % s.sweep_0001.digitalScans;
-    % s.header.DIChannelNames;
-    
+    % s.header.DIChannelNames
+    % s.header.IsDIChannelActive
+    idx_DI_active_ch = find(s.header.IsDIChannelActive);
+    if length(idx_DI_active_ch)>8
+       error('Active DI channel count > 8. Current pipeline cannot process') 
+    end
     DI_convert = arrayfun(@(x) bitget(x,8:-1:1,'uint8')', s.(temp_fieldn{temp_idx}).digitalScans, 'UniformOutput',false);
     % bitget(s.sweep_0001.digitalScans(1),8:-1:1,'uint8')
     
@@ -82,11 +86,14 @@ if ~isempty(s.header.DIChannelNames)
     % DI_convert_temp = cat(2,DI_convert{:}); % this will eat up memory space -> only rec the opened DI channels
     % cellfun(@(x) x(8),DI_convert);
     
-    
-    for i_DI = 1:length(s.header.DIChannelNames)
+    %{
+    HL 2022-3-29 edit/update
+    it looks like DI channel skips the inactive DI channels
+    %}
+    for i_DI = 1:length(idx_DI_active_ch)
         DATA.ch_data = cat(2,DATA.ch_data,...
             double(   cellfun(@(x) x(end-i_DI+1),DI_convert)   )); % IMPORTANT change to double format %  DI_convert_temp(end-i_DI+1,:)'
-        DATA.ch_names = cat(1, DATA.ch_names, s.header.DIChannelNames(i_DI));
+        DATA.ch_names = cat(1, DATA.ch_names, s.header.DIChannelNames(idx_DI_active_ch(i_DI)));
     end
     disp('Done DI channel conversion')
 else
