@@ -17,16 +17,19 @@ title(tmp_data.acq.FPnames{2})
 linkaxes(a, 'x')
 %}
 %% perform powerspectrum density calc in raw voltage
-% addpath(genpath('R:\tritsn01lab\tritsn01labspace\Haixin\MATLAB\chronux_2_12'));
+if isempty(which('mtspectrumc'))
+    addpath(genpath('R:\tritsn01lab\tritsn01labspace\Haixin\MATLAB\chronux_2_12'));
+end
 
 params.tapers = [2 3];
 params.pad = 0; % default
 params.Fs = tmp_data.gen.acqFs;
-params.fpass = [0.1 30];
-
+% params.fpass = [0.1 30];
+params.fpass = [0 params.Fs/2];
+disp(params.fpass)
 % tapers, pad, Fs, fpass, err, trialave
 % bin freq: 0:0.1:30
-f_bin = [0:0.1:30];
+f_bin = [0:0.1:100];
 f_bin_x = f_bin(1:end-1)+0.05;
 for i_p = 1:length(tmp_data.acq.FP)
     [S{i_p},f]=mtspectrumc(tmp_data.acq.FP{i_p},params);
@@ -67,13 +70,17 @@ figure;
 plot(f_bin_x,X_bin{1},'b' );
 hold on;
 plot(f_bin_x,X_bin{2}, 'r' );
-
-%}
 ylabel('Power (dB)');
 
-%%
-% rmpath(genpath('R:\tritsn01lab\tritsn01labspace\Haixin\MATLAB\chronux_2_12'));
+%}
 
+%%
+if ~isempty(which('mtspectrumc'))
+    %
+    disp('chronux is on path. Need to be removed after finishing by running:');
+    disp("rmpath(genpath('R:\tritsn01lab\tritsn01labspace\Haixin\MATLAB\chronux_2_12'))");
+    rmpath(genpath('R:\tritsn01lab\tritsn01labspace\Haixin\MATLAB\chronux_2_12'));
+end
 
 %% return result 
 Result = [];
@@ -83,4 +90,8 @@ Result.X_norm_bin = X_norm_bin;
 Result.f_bin = f_bin;
 Result.params = params;
 Result.FPnames = tmp_data.acq.FPnames;
+% also return the raw full PSD
+Result.X = X;
+Result.f = f;
+
 % Result. = ;
