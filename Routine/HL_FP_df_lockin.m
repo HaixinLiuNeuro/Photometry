@@ -67,6 +67,8 @@ elseif nargin == 15
     params.FP.winOv = winOv; %Window overlap size in seconds
     params.FP.basePrc = basePrc; % Percentile value from 1 - 100 to use when finding baseline points
     params.FP.ds2 = rawFs/dsRate; % downsample to freq, default
+    params.FP.Edge2Nan_s = 5; % use default
+    Edge2Nan_s = 5;
 end
 fprintf(2,'Lowpass Filter: %d Hz. downsample to %d Hz. \nOther params:\n',lpCut, rawFs/dsRate);
 disp(params.FP)
